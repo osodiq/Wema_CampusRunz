@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Wema.CampusRunz.Core.Models
 {
-    public class BaseEntity
+    public class Tokens
     {
-        public int Id { get; set; }
+        [Key]
+        public string UserId { get; set; }
+        public string Token { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     }

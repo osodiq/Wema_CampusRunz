@@ -5,12 +5,10 @@ using System.Text;
 
 namespace Wema.CampusRunz.Core.Models
 {
-    public class ProductType
+    public class ProductType: BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public decimal Amount { get; set; }
-        public DateTime CreatedAt { get; set; }
         public Product Product { get; set; }
         [ForeignKey("Product")]
         public int ProductId { get; set; }

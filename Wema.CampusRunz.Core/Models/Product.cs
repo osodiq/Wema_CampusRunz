@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Wema.CampusRunz.Core.Models
 {
-    public class Product 
+    public class Product : BaseEntity
     {
-        public int Id { get; set; }
         public string Category { get; set; }
         public string Name { get; set; }
         public decimal Amount { get; set; }
@@ -18,7 +17,6 @@ namespace Wema.CampusRunz.Core.Models
         public string Comment { get; set; }
         public string Address { get; set; }
         public bool Visibility { get; set; } = true;
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string EventDate { get; set; } = DateTime.Now.ToShortDateString();
         public string EventTime { get; set; } = DateTime.Now.ToLongDateString();
         public virtual ProductType ProductType { get; set; }
