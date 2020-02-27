@@ -38,7 +38,7 @@ namespace Wema.CampusRunz.Core.DTOs
             public decimal ConvinienceFee { get; set; }
             public List<string> Images { get; set; }
             public string Description { get; set; }
-            public HotelCategory HotelCategory { get; set; }
+            public List<HotelCategory> HotelCategories { get; set; }
 
         }
 

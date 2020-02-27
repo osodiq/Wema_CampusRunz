@@ -31,11 +31,7 @@ namespace Wema.CampusRunz.Domain.Services
                     Description = model.Description,
                     ConvinienceFee = model.ConvinienceFee,
                     Address = model.Address,
-                    ProductType = new ProductType
-                    {
-                       Name = model.HotelCategory.Category,
-                       Amount = model.HotelCategory.Amount
-                    }
+                    //ProductCategory = model.HotelCategories
                     //image to be added later
 
                 };
@@ -66,11 +62,11 @@ namespace Wema.CampusRunz.Domain.Services
                     ConvinienceFee = model.ConvinienceFee,
                     EventDate = model.EventDate,
                     EventTime = model.EventTime,
-                    ProductType = new ProductType
-                    {
-                         Name = model.EventCategory.Category,
-                         Amount = model.EventCategory.Amount
-                    }
+                    //ProductCategory = new Core.Models.ProductCategory
+                    //{
+                    //     Category = model.EventCategory.Category,
+                    //     Amount = model.EventCategory.Amount
+                    //}
 
                      //image to be added later
 

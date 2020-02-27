@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Wema.CampusRunz.Core.Models
@@ -19,6 +20,9 @@ namespace Wema.CampusRunz.Core.Models
         public bool Visibility { get; set; } = true;
         public string EventDate { get; set; } = DateTime.Now.ToShortDateString();
         public string EventTime { get; set; } = DateTime.Now.ToLongDateString();
-        public virtual ProductType ProductType { get; set; }
+        public virtual ICollection<ProductCategory> ProductCatory { get; set; } = new List<ProductCategory>();
+        [ForeignKey("AppUser")]
+        public Guid UserId { get; set; }
+        public AppUser User { get; set; }
     }
 }

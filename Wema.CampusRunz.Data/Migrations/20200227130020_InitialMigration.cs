@@ -69,36 +69,18 @@ namespace Wema.CampusRunz.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MediaOrders",
+                name: "ProductCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    DocumentPath = table.Column<string>(nullable: true),
-                    DeliveryAddress = table.Column<string>(nullable: true),
-                    PrintingType = table.Column<string>(nullable: true),
-                    ExtraDetail = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MediaOrders", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderAggregates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    Category = table.Column<string>(nullable: true),
-                    Amount = table.Column<decimal>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderAggregates", x => x.Id);
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,32 +97,6 @@ namespace Wema.CampusRunz.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductPhotos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    Category = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Amount = table.Column<decimal>(nullable: false),
-                    Vendor = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Delivery = table.Column<string>(nullable: true),
-                    DeliveryCost = table.Column<decimal>(nullable: false),
-                    ConvinienceFee = table.Column<decimal>(nullable: false),
-                    Comment = table.Column<string>(nullable: true),
-                    Address = table.Column<string>(nullable: true),
-                    Visibility = table.Column<bool>(nullable: false),
-                    EventDate = table.Column<string>(nullable: true),
-                    EventTime = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,19 +133,6 @@ namespace Wema.CampusRunz.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Services", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tokens",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    Token = table.Column<string>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tokens", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,13 +242,219 @@ namespace Wema.CampusRunz.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    Category = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Amount = table.Column<decimal>(nullable: false),
+                    Vendor = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Delivery = table.Column<string>(nullable: true),
+                    DeliveryCost = table.Column<decimal>(nullable: false),
+                    ConvinienceFee = table.Column<decimal>(nullable: false),
+                    Comment = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
+                    Visibility = table.Column<bool>(nullable: false),
+                    EventDate = table.Column<string>(nullable: true),
+                    EventTime = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
+                    UserId1 = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
+                    Token = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventTicketOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    ProductId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventTicketOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EventTicketOrders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventTicketOrders_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FastFoodOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    DeliveryAddress = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    ProductId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FastFoodOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FastFoodOrders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FastFoodOrders_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GassRefillOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    DeliveryAddress = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    ProductId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GassRefillOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GassRefillOrders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GassRefillOrders_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HotelOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    ProductId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HotelOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HotelOrders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_HotelOrders_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MediaAndProductionOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    DocumentPath = table.Column<string>(nullable: true),
+                    DeliveryAddress = table.Column<string>(nullable: true),
+                    PrintingType = table.Column<string>(nullable: true),
+                    ExtraDetail = table.Column<string>(nullable: true),
+                    NumberOfPages = table.Column<int>(nullable: false),
+                    TotalAmount = table.Column<decimal>(nullable: false),
+                    ProductId = table.Column<int>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
+                    UserId1 = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaAndProductionOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MediaAndProductionOrders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MediaAndProductionOrders_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    ProductId = table.Column<int>(nullable: true),
+                    ProductId = table.Column<int>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
+                    UserId1 = table.Column<string>(nullable: true),
                     TotalAmount = table.Column<decimal>(nullable: false),
                     Method = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
@@ -319,25 +468,31 @@ namespace Wema.CampusRunz.Data.Migrations
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Payments_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductTypes",
+                name: "ProductCategory",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
+                    Category = table.Column<string>(nullable: true),
                     Amount = table.Column<decimal>(nullable: false),
                     ProductId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductTypes", x => x.Id);
+                    table.PrimaryKey("PK_ProductCategory", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductTypes_Products_ProductId",
+                        name: "FK_ProductCategory_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -345,44 +500,31 @@ namespace Wema.CampusRunz.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerOrders",
+                name: "OrderCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    ProductId = table.Column<int>(nullable: true),
-                    Detail = table.Column<string>(nullable: true),
-                    DeliveryAddress = table.Column<string>(nullable: true),
-                    PaymentId = table.Column<int>(nullable: true),
-                    AggregateId = table.Column<int>(nullable: true),
-                    MediaOrderId = table.Column<int>(nullable: true)
+                    Category = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    EventTicketOrderId = table.Column<int>(nullable: true),
+                    HotelOrderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerOrders", x => x.Id);
+                    table.PrimaryKey("PK_OrderCategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CustomerOrders_OrderAggregates_AggregateId",
-                        column: x => x.AggregateId,
-                        principalTable: "OrderAggregates",
+                        name: "FK_OrderCategories_EventTicketOrders_EventTicketOrderId",
+                        column: x => x.EventTicketOrderId,
+                        principalTable: "EventTicketOrders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CustomerOrders_MediaOrders_MediaOrderId",
-                        column: x => x.MediaOrderId,
-                        principalTable: "MediaOrders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CustomerOrders_Payments_PaymentId",
-                        column: x => x.PaymentId,
-                        principalTable: "Payments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CustomerOrders_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
+                        name: "FK_OrderCategories_HotelOrders_HotelOrderId",
+                        column: x => x.HotelOrderId,
+                        principalTable: "HotelOrders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -427,24 +569,64 @@ namespace Wema.CampusRunz.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerOrders_AggregateId",
-                table: "CustomerOrders",
-                column: "AggregateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CustomerOrders_MediaOrderId",
-                table: "CustomerOrders",
-                column: "MediaOrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CustomerOrders_PaymentId",
-                table: "CustomerOrders",
-                column: "PaymentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CustomerOrders_ProductId",
-                table: "CustomerOrders",
+                name: "IX_EventTicketOrders_ProductId",
+                table: "EventTicketOrders",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventTicketOrders_UserId",
+                table: "EventTicketOrders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FastFoodOrders_ProductId",
+                table: "FastFoodOrders",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FastFoodOrders_UserId",
+                table: "FastFoodOrders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GassRefillOrders_ProductId",
+                table: "GassRefillOrders",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GassRefillOrders_UserId",
+                table: "GassRefillOrders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HotelOrders_ProductId",
+                table: "HotelOrders",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HotelOrders_UserId",
+                table: "HotelOrders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaAndProductionOrders_ProductId",
+                table: "MediaAndProductionOrders",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaAndProductionOrders_UserId1",
+                table: "MediaAndProductionOrders",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderCategories_EventTicketOrderId",
+                table: "OrderCategories",
+                column: "EventTicketOrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderCategories_HotelOrderId",
+                table: "OrderCategories",
+                column: "HotelOrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_ProductId",
@@ -452,10 +634,24 @@ namespace Wema.CampusRunz.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductTypes_ProductId",
-                table: "ProductTypes",
-                column: "ProductId",
-                unique: true);
+                name: "IX_Payments_UserId1",
+                table: "Payments",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductCategory_ProductId",
+                table: "ProductCategory",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_UserId1",
+                table: "Products",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_UserId",
+                table: "Tokens",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -476,16 +672,31 @@ namespace Wema.CampusRunz.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CustomerOrders");
-
-            migrationBuilder.DropTable(
                 name: "DeliveryMethods");
 
             migrationBuilder.DropTable(
-                name: "ProductPhotos");
+                name: "FastFoodOrders");
 
             migrationBuilder.DropTable(
-                name: "ProductTypes");
+                name: "GassRefillOrders");
+
+            migrationBuilder.DropTable(
+                name: "MediaAndProductionOrders");
+
+            migrationBuilder.DropTable(
+                name: "OrderCategories");
+
+            migrationBuilder.DropTable(
+                name: "Payments");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategories");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategory");
+
+            migrationBuilder.DropTable(
+                name: "ProductPhotos");
 
             migrationBuilder.DropTable(
                 name: "ServicePictures");
@@ -500,19 +711,16 @@ namespace Wema.CampusRunz.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "EventTicketOrders");
 
             migrationBuilder.DropTable(
-                name: "OrderAggregates");
-
-            migrationBuilder.DropTable(
-                name: "MediaOrders");
-
-            migrationBuilder.DropTable(
-                name: "Payments");
+                name: "HotelOrders");
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }
