@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using Wema.CampusRunz.Core.Configurations;
 using Wema.CampusRunz.Core.Models;
 
@@ -15,8 +16,7 @@ namespace Wema.CampusRunz.Data.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.ApplyConfiguration(new RoleConfiguration());
-            //modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            
         }
 
         public DbSet<Product> Products { get; set; }

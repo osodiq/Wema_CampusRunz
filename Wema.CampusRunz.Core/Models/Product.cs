@@ -18,11 +18,12 @@ namespace Wema.CampusRunz.Core.Models
         public string Comment { get; set; }
         public string Address { get; set; }
         public bool Visibility { get; set; } = true;
-        public string EventDate { get; set; } = DateTime.Now.ToShortDateString();
-        public string EventTime { get; set; } = DateTime.Now.ToLongDateString();
+        public string EventDate { get; set; } 
+        public string EventTime { get; set; } 
         public virtual ICollection<ProductCategory> ProductCatory { get; set; } = new List<ProductCategory>();
         [ForeignKey("AppUser")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
+        public List<ProductPhoto> Images { get; set; }
         public AppUser User { get; set; }
     }
 }

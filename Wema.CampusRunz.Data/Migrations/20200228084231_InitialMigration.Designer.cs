@@ -10,7 +10,7 @@ using Wema.CampusRunz.Data.Data;
 namespace Wema.CampusRunz.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200227130020_InitialMigration")]
+    [Migration("20200228084231_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -219,6 +219,8 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
+                    b.Property<int?>("OrderCategoriesId");
+
                     b.Property<int>("ProductId");
 
                     b.Property<decimal>("TotalAmount");
@@ -226,6 +228,8 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderCategoriesId");
 
                     b.HasIndex("ProductId");
 
@@ -294,6 +298,8 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
+                    b.Property<int?>("OrderCategoriesId");
+
                     b.Property<int>("ProductId");
 
                     b.Property<decimal>("TotalAmount");
@@ -301,6 +307,8 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderCategoriesId");
 
                     b.HasIndex("ProductId");
 
@@ -331,15 +339,13 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<decimal>("TotalAmount");
 
-                    b.Property<Guid>("UserId");
-
-                    b.Property<string>("UserId1");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("MediaAndProductionOrders");
                 });
@@ -354,19 +360,11 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int?>("EventTicketOrderId");
-
-                    b.Property<int?>("HotelOrderId");
-
                     b.Property<decimal>("Price");
 
                     b.Property<int>("Quantity");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EventTicketOrderId");
-
-                    b.HasIndex("HotelOrderId");
 
                     b.ToTable("OrderCategories");
                 });
@@ -389,15 +387,13 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<decimal>("TotalAmount");
 
-                    b.Property<Guid>("UserId");
-
-                    b.Property<string>("UserId1");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Payments");
                 });
@@ -432,9 +428,7 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<Guid>("UserId");
-
-                    b.Property<string>("UserId1");
+                    b.Property<string>("UserId");
 
                     b.Property<string>("Vendor");
 
@@ -442,7 +436,7 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Products");
                 });
@@ -616,6 +610,10 @@ namespace Wema.CampusRunz.Data.Migrations
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.EventTicketOrder", b =>
                 {
+                    b.HasOne("Wema.CampusRunz.Core.Models.OrderCategory", "OrderCategories")
+                        .WithMany()
+                        .HasForeignKey("OrderCategoriesId");
+
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -652,6 +650,10 @@ namespace Wema.CampusRunz.Data.Migrations
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.HotelOrder", b =>
                 {
+                    b.HasOne("Wema.CampusRunz.Core.Models.OrderCategory", "OrderCategories")
+                        .WithMany()
+                        .HasForeignKey("OrderCategoriesId");
+
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -671,18 +673,7 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.OrderCategory", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.EventTicketOrder")
-                        .WithMany("OrderCategories")
-                        .HasForeignKey("EventTicketOrderId");
-
-                    b.HasOne("Wema.CampusRunz.Core.Models.HotelOrder")
-                        .WithMany("OrderCategories")
-                        .HasForeignKey("HotelOrderId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.Payment", b =>
@@ -694,14 +685,14 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.Product", b =>
                 {
                     b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductCategory", b =>

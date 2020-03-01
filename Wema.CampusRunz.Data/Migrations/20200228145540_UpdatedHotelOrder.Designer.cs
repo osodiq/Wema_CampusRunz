@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wema.CampusRunz.Data.Data;
 
 namespace Wema.CampusRunz.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200228145540_UpdatedHotelOrder")]
+    partial class UpdatedHotelOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,6 +219,8 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
+                    b.Property<int?>("OrderCategoriesId");
+
                     b.Property<int>("ProductId");
 
                     b.Property<decimal>("TotalAmount");
@@ -224,6 +228,8 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderCategoriesId");
 
                     b.HasIndex("ProductId");
 
@@ -350,8 +356,6 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int?>("EventTicketOrderId");
-
                     b.Property<int?>("HotelOrderId");
 
                     b.Property<decimal>("Price");
@@ -359,8 +363,6 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.Property<int>("Quantity");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EventTicketOrderId");
 
                     b.HasIndex("HotelOrderId");
 
@@ -470,15 +472,11 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("ImagePath");
 
-                    b.Property<string>("ImageString");
-
                     b.Property<bool>("IsActive");
 
-                    b.Property<int>("ProductId");
+                    b.Property<string>("ProductId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductPhotos");
                 });
@@ -612,6 +610,10 @@ namespace Wema.CampusRunz.Data.Migrations
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.EventTicketOrder", b =>
                 {
+                    b.HasOne("Wema.CampusRunz.Core.Models.OrderCategory", "OrderCategories")
+                        .WithMany()
+                        .HasForeignKey("OrderCategoriesId");
+
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -672,10 +674,6 @@ namespace Wema.CampusRunz.Data.Migrations
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.OrderCategory", b =>
                 {
-                    b.HasOne("Wema.CampusRunz.Core.Models.EventTicketOrder")
-                        .WithMany("OrderCategories")
-                        .HasForeignKey("EventTicketOrderId");
-
                     b.HasOne("Wema.CampusRunz.Core.Models.HotelOrder")
                         .WithMany("OrderCategories")
                         .HasForeignKey("HotelOrderId");
@@ -704,14 +702,6 @@ namespace Wema.CampusRunz.Data.Migrations
                 {
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany("ProductCatory")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany("Images")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

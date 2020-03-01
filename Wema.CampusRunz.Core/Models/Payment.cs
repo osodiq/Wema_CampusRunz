@@ -11,7 +11,7 @@ namespace Wema.CampusRunz.Core.Models
         public int ProductId { get; set; }
         public Product Product { get; set; }
         [ForeignKey("AppUser")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public AppUser User { get; set; }
         public decimal TotalAmount { get; set; }
         public string Method { get; set; }

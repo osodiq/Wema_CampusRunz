@@ -31,8 +31,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>

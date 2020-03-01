@@ -16,7 +16,7 @@ namespace Wema.CampusRunz.Core.Models
         public Payment Payment { get; set; }
         public OrderCategory Aggregate { get; set; }
         [ForeignKey("AppUser")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public AppUser User { get; set; }
     }
 }

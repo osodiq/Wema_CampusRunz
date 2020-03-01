@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wema.CampusRunz.Data.Data;
 
 namespace Wema.CampusRunz.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200229181023_ExtendedEventTicket")]
+    partial class ExtendedEventTicket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -470,15 +472,11 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("ImagePath");
 
-                    b.Property<string>("ImageString");
-
                     b.Property<bool>("IsActive");
 
-                    b.Property<int>("ProductId");
+                    b.Property<string>("ProductId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductPhotos");
                 });
@@ -704,14 +702,6 @@ namespace Wema.CampusRunz.Data.Migrations
                 {
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany("ProductCatory")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany("Images")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
