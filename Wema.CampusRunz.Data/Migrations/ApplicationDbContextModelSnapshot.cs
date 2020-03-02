@@ -457,7 +457,7 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
@@ -546,23 +546,6 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Tokens");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Data.Data.ProductCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

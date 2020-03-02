@@ -10,7 +10,7 @@ using Wema.CampusRunz.Data.Data;
 namespace Wema.CampusRunz.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200228084231_InitialMigration")]
+    [Migration("20200302072051_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -219,8 +219,6 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int?>("OrderCategoriesId");
-
                     b.Property<int>("ProductId");
 
                     b.Property<decimal>("TotalAmount");
@@ -228,8 +226,6 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderCategoriesId");
 
                     b.HasIndex("ProductId");
 
@@ -298,8 +294,6 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int?>("OrderCategoriesId");
-
                     b.Property<int>("ProductId");
 
                     b.Property<decimal>("TotalAmount");
@@ -307,8 +301,6 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderCategoriesId");
 
                     b.HasIndex("ProductId");
 
@@ -360,11 +352,19 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
+                    b.Property<int?>("EventTicketOrderId");
+
+                    b.Property<int?>("HotelOrderId");
+
                     b.Property<decimal>("Price");
 
                     b.Property<int>("Quantity");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EventTicketOrderId");
+
+                    b.HasIndex("HotelOrderId");
 
                     b.ToTable("OrderCategories");
                 });
@@ -459,7 +459,7 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
@@ -472,11 +472,15 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("ImagePath");
 
+                    b.Property<string>("ImageString");
+
                     b.Property<bool>("IsActive");
 
-                    b.Property<string>("ProductId");
+                    b.Property<int>("ProductId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductPhotos");
                 });
@@ -546,23 +550,6 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.ToTable("Tokens");
                 });
 
-            modelBuilder.Entity("Wema.CampusRunz.Data.Data.ProductCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductCategories");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -610,10 +597,6 @@ namespace Wema.CampusRunz.Data.Migrations
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.EventTicketOrder", b =>
                 {
-                    b.HasOne("Wema.CampusRunz.Core.Models.OrderCategory", "OrderCategories")
-                        .WithMany()
-                        .HasForeignKey("OrderCategoriesId");
-
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -650,10 +633,6 @@ namespace Wema.CampusRunz.Data.Migrations
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.HotelOrder", b =>
                 {
-                    b.HasOne("Wema.CampusRunz.Core.Models.OrderCategory", "OrderCategories")
-                        .WithMany()
-                        .HasForeignKey("OrderCategoriesId");
-
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -674,6 +653,17 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.OrderCategory", b =>
+                {
+                    b.HasOne("Wema.CampusRunz.Core.Models.EventTicketOrder")
+                        .WithMany("OrderCategories")
+                        .HasForeignKey("EventTicketOrderId");
+
+                    b.HasOne("Wema.CampusRunz.Core.Models.HotelOrder")
+                        .WithMany("OrderCategories")
+                        .HasForeignKey("HotelOrderId");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.Payment", b =>
@@ -699,6 +689,14 @@ namespace Wema.CampusRunz.Data.Migrations
                 {
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany("ProductCatory")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
+                {
+                    b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
+                        .WithMany("Images")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
