@@ -5,17 +5,16 @@ using System.Text;
 
 namespace Wema.CampusRunz.Core.Models
 {
-    public class Payment: BaseEntity
+    public class GassRefillOrder: BaseEntity
     {
-        [ForeignKey("Product")]
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
+        public string DeliveryAddress { get; set; }
         [ForeignKey("AppUser")]
         public string UserId { get; set; }
         public AppUser User { get; set; }
         public decimal TotalAmount { get; set; }
-        public string Method { get; set; }
-        public string Description { get; set; }
-        public bool Status { get; set; }
+        [ForeignKey("Product")]
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
+
     }
 }

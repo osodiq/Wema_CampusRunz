@@ -11,10 +11,10 @@ namespace Wema.CampusRunz.Core.Interfaces
     {
         bool CreateProduct(Product product);
         Task<GetProductDTO> GetProductById(int productId, string category);
-        Task<ProductCreationDto.FastFoodDto> CreatFastFood(ProductCreationDto.FastFoodDto model);
-        Task<ProductCreationDto.GassRefillDto> CreateGassRefill(ProductCreationDto.GassRefillDto model);
-        Task<ProductCreationDto.EventTicketDto> CreateEventTicket(ProductCreationDto.EventTicketDto model);
-        Task<ProductCreationDto.HotelDto> CreateHotel(ProductCreationDto.HotelDto model);
+        Task<ProductCreationDto.FastFoodDto> CreatFastFood(ProductCreationDto.FastFoodDto model, string userId);
+        Task<ProductCreationDto.GassRefillDto> CreateGassRefill(ProductCreationDto.GassRefillDto model, string userId);
+        Task<ProductCreationDto.EventTicketDto> CreateEventTicket(ProductCreationDto.EventTicketDto model, string userId);
+        Task<ProductCreationDto.HotelDto> CreateHotel(ProductCreationDto.HotelDto model, string userId);
         //Task<ProductDto> CreateMedia(ProductDto model);
         
     }

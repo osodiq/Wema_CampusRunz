@@ -19,7 +19,7 @@ namespace Wema.CampusRunz.Domain.Services
             _context = context;
         }
 
-        public async Task<ProductCreationDto.HotelDto> CreateHotel(ProductCreationDto.HotelDto model)
+        public async Task<ProductCreationDto.HotelDto> CreateHotel(ProductCreationDto.HotelDto model, string userId)
         {
             var hotel = await _context.Products.FirstOrDefaultAsync(x => x.Name == model.Name);
             if(hotel == null)
@@ -31,13 +31,9 @@ namespace Wema.CampusRunz.Domain.Services
                     Description = model.Description,
                     ConvinienceFee = model.ConvinienceFee,
                     Address = model.Address,
-                    ProductType = new ProductType
-                    {
-                       Name = model.HotelCategory.Category,
-                       Amount = model.HotelCategory.Amount
-                    }
-                    //image to be added later
-
+                    ProductCatory = model.HotelCategories,
+                    Images = model.Images,
+                    UserId = userId
                 };
                 _context.Products.Add(productToCreate);
                 if(await _context.SaveChangesAsync() > 0)
@@ -52,7 +48,7 @@ namespace Wema.CampusRunz.Domain.Services
 
        
 
-        public async Task<ProductCreationDto.EventTicketDto> CreateEventTicket(ProductCreationDto.EventTicketDto model)
+        public async Task<ProductCreationDto.EventTicketDto> CreateEventTicket(ProductCreationDto.EventTicketDto model, string userId)
         {
            var ticket = await _context.Products.FirstOrDefaultAsync(x => x.Name == model.Name);
             if(ticket == null)
@@ -66,13 +62,9 @@ namespace Wema.CampusRunz.Domain.Services
                     ConvinienceFee = model.ConvinienceFee,
                     EventDate = model.EventDate,
                     EventTime = model.EventTime,
-                    ProductType = new ProductType
-                    {
-                         Name = model.EventCategory.Category,
-                         Amount = model.EventCategory.Amount
-                    }
-
-                     //image to be added later
+                    ProductCatory = model.EventCategory,
+                    Images = model.Images,
+                    UserId = userId
 
                 };
                 _context.Products.Add(productToCreate);
@@ -85,7 +77,7 @@ namespace Wema.CampusRunz.Domain.Services
             return null;
         }
 
-        public async Task<ProductCreationDto.GassRefillDto> CreateGassRefill(ProductCreationDto.GassRefillDto model)
+        public async Task<ProductCreationDto.GassRefillDto> CreateGassRefill(ProductCreationDto.GassRefillDto model, string userId)
         {
             var gass = await _context.Products.FirstOrDefaultAsync(x => x.Name == model.Name);
             if (gass == null)
@@ -97,8 +89,9 @@ namespace Wema.CampusRunz.Domain.Services
                     Amount = model.Amount,
                     Description = model.Description,
                     ConvinienceFee = model.ConvinienceFee,
-                    // image to be added later
-                    
+                    Images = model.Images,
+                    UserId = userId
+
                 };
                 _context.Products.Add(productToCreate);
                 if (await _context.SaveChangesAsync() > 0)
@@ -124,7 +117,7 @@ namespace Wema.CampusRunz.Domain.Services
             }
         }
 
-        public async Task<ProductCreationDto.FastFoodDto> CreatFastFood(ProductCreationDto.FastFoodDto model)
+        public async Task<ProductCreationDto.FastFoodDto> CreatFastFood(ProductCreationDto.FastFoodDto model, string userId)
         {
             var fastFood = await _context.Products.FirstOrDefaultAsync(x => x.Name == model.Name);
             if (fastFood == null)
@@ -138,7 +131,8 @@ namespace Wema.CampusRunz.Domain.Services
                     Vendor = model.Vendor,
                     Description = model.Description,
                     ConvinienceFee = model.ConvinienceFee,
-                    //image to be added later
+                    Images = model.Images,
+                    UserId = userId
                 };
                 _context.Products.Add(productToCreate);
                 if (await _context.SaveChangesAsync() > 0)
@@ -172,8 +166,7 @@ namespace Wema.CampusRunz.Domain.Services
                   Amount = product.Amount,
                   CreatedAt = product.CreatedAt,
                   Description = product.Description
-
-
+                  
                 };
                 return productToReturn;
             }

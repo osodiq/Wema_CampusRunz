@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wema.CampusRunz.Core.Configurations;
 using Wema.CampusRunz.Core.DTOs;
@@ -11,6 +12,7 @@ namespace Wema.CampusRunz.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MarketPlaceController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -22,8 +24,8 @@ namespace Wema.CampusRunz.Api.Controllers
             _productManager = productManager;
         }
         // POST: api/Products
-        [HttpPost("Product/fast-food")]
-        public async Task<IActionResult> CreateFastFood([FromBody] ProductCreationDto.FastFoodDto productDto)
+        [HttpPost("{userId}/Product/fast-food")]
+        public async Task<IActionResult> CreateFastFood([FromBody] ProductCreationDto.FastFoodDto productDto, string userId)
         {
 
             try
@@ -36,14 +38,19 @@ namespace Wema.CampusRunz.Api.Controllers
                         Message = "Invalid model"
                     });
                 }
+                if (userId != User.FindFirst("id").Value)
+                {
+                    return Unauthorized();
+                }
 
-                var fastFood = await _productManager.CreatFastFood(productDto);
+
+                var fastFood = await _productManager.CreatFastFood(productDto, userId);
                 if(fastFood != null)
                 {
                     return Created("", new Response<ProductCreationDto.FastFoodDto>
                     {
                         Code = "201",
-                        Message = $"You have successfully created a product with name '{fastFood.Name}'",
+                        Message = $"You have successfully created a product with name {fastFood.Name}",
                         Data = fastFood
 
                     });
@@ -62,8 +69,8 @@ namespace Wema.CampusRunz.Api.Controllers
 
         //Gass Refill
         // POST: api/Products
-        [HttpPost("Product/gass-refill")]
-        public async Task<IActionResult> RefillGass(ProductCreationDto.GassRefillDto productDto)
+        [HttpPost("{userId}/Product/gass-refill")]
+        public async Task<IActionResult> RefillGass(ProductCreationDto.GassRefillDto productDto, string userId)
         {
 
             try
@@ -76,14 +83,19 @@ namespace Wema.CampusRunz.Api.Controllers
                         Message = "Invalid model"
                     });
                 }
+                if (userId != User.FindFirst("id").Value)
+                {
+                    return Unauthorized();
+                }
 
-                ProductCreationDto.GassRefillDto refilledGass = await _productManager.CreateGassRefill(productDto);
+
+                ProductCreationDto.GassRefillDto refilledGass = await _productManager.CreateGassRefill(productDto, userId);
                 if(refilledGass != null)
                 {
                     return Created("", new Response<ProductCreationDto.GassRefillDto>
                     {
                         Code = "201",
-                        Message = $"You have successfully created a product with name '{refilledGass.Name}'",
+                        Message = $"You have successfully created a product with name {refilledGass.Name}",
                         Data = refilledGass
 
                     });
@@ -100,8 +112,8 @@ namespace Wema.CampusRunz.Api.Controllers
         }
         
         // POST: api/Products
-        [HttpPost("Product/hotel")]
-        public async Task<IActionResult> CreatHotel([FromBody] ProductCreationDto.HotelDto productDto)
+        [HttpPost("{userId}/Product/hotel")]
+        public async Task<IActionResult> CreatHotel([FromBody] ProductCreationDto.HotelDto productDto, string userId)
         {
 
             try
@@ -114,13 +126,19 @@ namespace Wema.CampusRunz.Api.Controllers
                         Message = "Invalid model"
                     });
                 }
-                var createdHotel = await _productManager.CreateHotel(productDto);
+
+                if (userId != User.FindFirst("id").Value)
+                {
+                    return Unauthorized();
+                }
+
+                var createdHotel = await _productManager.CreateHotel(productDto, userId);
                 if(createdHotel != null)
                 {
                     return Created("", new Response<ProductCreationDto.HotelDto>
                     {
                         Code = "201",
-                        Message = $"You have successfully created a product with name '{createdHotel.Name}'",
+                        Message = $"You have successfully created a product with name {createdHotel.Name}",
                         Data = createdHotel
 
                     });

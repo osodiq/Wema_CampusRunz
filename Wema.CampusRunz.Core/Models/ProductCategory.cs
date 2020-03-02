@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Wema.CampusRunz.Core.Models
 {
-    public class ProductType: BaseEntity
+    public class ProductCategory: BaseEntity
     {
-        public string Name { get; set; }
+        public string Category { get; set; }
         public decimal Amount { get; set; }
         public Product Product { get; set; }
         [ForeignKey("Product")]

@@ -35,6 +35,7 @@ namespace Wema.CampusRunz.Api
             services.AddTransient<IProductManager, ProductManager>();
             services.AddTransient<IServiceManager, ServiceManager>();
             services.AddTransient<IRepository<Product>, Repository<Product>>();
+            services.AddScoped<ICustomerService, CustomerServices>();
             var jwtSettings = new JwtSettings();
             Configuration.Bind(key: nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
@@ -68,6 +69,7 @@ namespace Wema.CampusRunz.Api
                     RequireExpirationTime = false,
                     ValidateLifetime = true
                 };
+
             });
 
             services.AddCors(c =>
@@ -92,6 +94,8 @@ namespace Wema.CampusRunz.Api
                     In = "header",
                     Type = "apiKey"
                 });
+
+                c.AddSecurityRequirement(security);
             });
 
           
