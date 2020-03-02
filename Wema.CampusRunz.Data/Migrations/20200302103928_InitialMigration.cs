@@ -230,7 +230,8 @@ namespace Wema.CampusRunz.Data.Migrations
                     Visibility = table.Column<bool>(nullable: false),
                     EventDate = table.Column<string>(nullable: true),
                     EventTime = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(nullable: true),
+                    Images = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

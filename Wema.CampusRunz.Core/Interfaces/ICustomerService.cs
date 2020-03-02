@@ -17,13 +17,13 @@ namespace Wema.CampusRunz.Core.Interfaces
 
         #endregion
         #region Hotel
-        Task<HotelOrder> CreateHotelOrder(int productId, string userId, List<OrderCategory> orderCategoryVm);
+        Task<HotelOrder> CreateHotelOrder(int productId, string userId, Category OrderCategory);
         Task<object> GetHotelOrderById(int orderId);
         Task<List<object>> GetHotelOrders();
 
         #endregion
         #region Event Ticket
-        Task<EventTicketOrder> CreateEventTicketOrder(int productId, string userId, List<OrderCategory> orderCategoryVm);
+        Task<EventTicketOrder> CreateEventTicketOrder(int productId, string userId, Category OrderCategory);
         Task<object> GetEventTicketOrderById(int orderId);
         Task<List<object>> GetEventTicketOrders();
 

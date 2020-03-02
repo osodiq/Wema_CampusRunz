@@ -424,6 +424,8 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("EventTime");
 
+                    b.Property<string>("Images");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("UserId");
@@ -694,7 +696,7 @@ namespace Wema.CampusRunz.Data.Migrations
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
                 {
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany("Images")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

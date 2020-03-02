@@ -23,7 +23,7 @@ namespace Wema.CampusRunz.Core.Models
         public virtual ICollection<ProductCategory> ProductCatory { get; set; } = new List<ProductCategory>();
         [ForeignKey("AppUser")]
         public string UserId { get; set; }
-        public List<ProductPhoto> Images { get; set; }
+        public string Images { get; set; }
         public AppUser User { get; set; }
     }
 }
