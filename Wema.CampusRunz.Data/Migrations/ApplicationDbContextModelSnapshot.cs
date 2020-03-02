@@ -435,14 +435,19 @@ namespace Wema.CampusRunz.Data.Migrations
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.Tokens", b =>
                 {
-                    b.Property<string>("UserId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("Token");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tokens");
                 });
@@ -524,6 +529,13 @@ namespace Wema.CampusRunz.Data.Migrations
                         .WithOne("ProductType")
                         .HasForeignKey("Wema.CampusRunz.Core.Models.ProductType", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.Tokens", b =>
+                {
+                    b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

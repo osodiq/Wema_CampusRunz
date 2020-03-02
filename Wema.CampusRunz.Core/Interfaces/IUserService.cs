@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Wema.CampusRunz.Core.DTOs;
+using Wema.CampusRunz.Core.DTOs.Request;
 
 namespace Wema.CampusRunz.Core.Interfaces
 {
     public interface IUserService
     {
 
-        Task<AuthenticationResult> SignupAsync(string firstname, string lastname, string email, string password, string confirm_pass, string phonenumber, string category, string businessname, string businessdesc, string base64image);
+        Task<AuthenticationResult> SignupAsync(UserRegistrationRequest request);
 
         Task<AuthenticationResult> SigninAsync(string email, string password);
 

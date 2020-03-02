@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Wema.CampusRunz.Core.DTOs;
@@ -37,7 +39,7 @@ namespace Wema.CampusRunz.Api.Controllers
                 });
             }
 
-            var authResponse = await _userService.SignupAsync(request.Firstname, request.Lastname, request.Email, request.Password, request.confirmPassword, request.phoneNo, request.Category, request.businessName, request.businessDescription, request.businessLogo);
+            var authResponse = await _userService.SignupAsync(request);
             if (!authResponse.Success)
             {
                 return BadRequest(new AuthFailedResponse
@@ -126,14 +128,12 @@ namespace Wema.CampusRunz.Api.Controllers
 
             }
 
-
-
         }
 
         [HttpPost(template: ApiRoutes.Auth.ForgotPassword)]
         public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordRequest request)
         {
-            var authResponse = await _userService.ForgotPasswordAsync(request.Contact);
+            var authResponse = await _userService.ForgotPasswordAsync(request.Username);
 
 
             if (!authResponse.Success)
@@ -166,18 +166,32 @@ namespace Wema.CampusRunz.Api.Controllers
                 });
             }
 
-            return Ok(new GenerateTokenSuccess
+            return Ok(new AuthSuccessResponse
             {
+                Token = authResponse.Token,
                 Message = "Token has been validated"
             });
 
+
+
         }
 
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost(template: ApiRoutes.Auth.ResetPassword)]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
-            var authResponse = await _userService.ResetPasswordAsync(request.Username, request.Password, request.ConfirmPassword);
+           
+            AppUser user = await _userManager.FindByEmailAsync(request.Username);
 
+            var userId = user.Id;
+
+            if (userId != User.FindFirst("id").Value)
+            {
+                return Unauthorized();
+            }
+
+            var authResponse = await _userService.ResetPasswordAsync(request.Username, request.Password, request.ConfirmPassword);
 
             if (!authResponse.Success)
             {
@@ -193,6 +207,7 @@ namespace Wema.CampusRunz.Api.Controllers
             });
 
         }
+
     }
 
 }

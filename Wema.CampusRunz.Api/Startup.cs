@@ -35,9 +35,13 @@ namespace Wema.CampusRunz.Api
             services.AddTransient<IProductManager, ProductManager>();
             services.AddTransient<IServiceManager, ServiceManager>();
             services.AddTransient<IRepository<Product>, Repository<Product>>();
+
+
             var jwtSettings = new JwtSettings();
             Configuration.Bind(key: nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
+
+           
 
             services.AddScoped<IUserService, UserService>();
             services.AddIdentity<AppUser, IdentityRole>(Options =>
@@ -50,25 +54,7 @@ namespace Wema.CampusRunz.Api
                 Options.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-            services.AddAuthentication(configureOptions: x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key: Encoding.ASCII.GetBytes(jwtSettings.Secret)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    RequireExpirationTime = false,
-                    ValidateLifetime = true
-                };
-            });
+            
 
             services.AddCors(c =>
             {
@@ -77,21 +63,45 @@ namespace Wema.CampusRunz.Api
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSwaggerGen(c =>
+
+            services.AddAuthentication(configureOptions: x =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Wema_CampusRunZ API Documentation", Version = "v1" });
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(x =>
+           {
+               x.SaveToken = true;
+               x.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuerSigningKey = true,
+                   IssuerSigningKey = new SymmetricSecurityKey(key: Encoding.ASCII.GetBytes(jwtSettings.Secret)),
+                   ValidateIssuer = false,
+                   ValidateAudience = false,
+                   RequireExpirationTime = false,
+                   ValidateLifetime = true
+               };
+           });
+
+
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new Info { Title = "Wema_CampusRunZ API Documentation", Version = "v1" });
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer",new string[0] }
                 };
 
-                c.AddSecurityDefinition(name: "Bearer", new ApiKeyScheme
+                x.AddSecurityDefinition(name: "Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using bearer scheme",
                     Name = "Authorization",
                     In = "header",
                     Type = "apiKey"
                 });
+
+                x.AddSecurityRequirement(security);   
             });
 
           
