@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Wema.CampusRunz.Core.DTOs;
+using Wema.CampusRunz.Core.DTOs.Request;
 using Wema.CampusRunz.Core.Interfaces;
 using Wema.CampusRunz.Core.Models;
 using Wema.CampusRunz.Core.Options;
@@ -36,18 +37,18 @@ namespace Wema.CampusRunz.Domain.Services
 
 
 
-        public async Task<AuthenticationResult> SignupAsync(string firstname, string lastname, string email, string password, string confirm_pass, string phonenumber, string category, string businessname, string businessdesc, string Base64Image)
+        public async Task<AuthenticationResult> SignupAsync(UserRegistrationRequest request)
         {
-            var existingUser = await _userManager.FindByEmailAsync(email);
+            var existingUser = await _userManager.FindByEmailAsync(request.Email);
 
-            var currentuser = _userManager.Users.FirstOrDefault(x => x.PhoneNumber == phonenumber);
+            var currentuser = _userManager.Users.FirstOrDefault(x => x.PhoneNumber == request.phoneNo);
 
             if (existingUser != null)
             {
 
                 return new AuthenticationResult
                 {
-                    Errors = new[] { "User already exists" }
+                    Error = "User already exists" 
                 };
             }
 
@@ -61,7 +62,7 @@ namespace Wema.CampusRunz.Domain.Services
 
 
 
-            if (password != confirm_pass)
+            if (request.Password != request.confirmPassword)
             {
                 return new AuthenticationResult
                 {
@@ -72,19 +73,19 @@ namespace Wema.CampusRunz.Domain.Services
             //var newUser = new IdentityUser
             var newUser = new AppUser
             {
-                Firstname = firstname,
-                Lastname = lastname,
-                Email = email,
-                UserName = email,
-                PhoneNumber = phonenumber,
-                Category = category,
-                Businessname = businessname,
-                BusinessDescription = businessdesc,
-                BusinessLogo = Base64Image
+                Firstname = request.Firstname,
+                Lastname = request.Lastname,
+                Email = request.Email,
+                UserName = request.Email,
+                PhoneNumber = request.phoneNo,
+                Category = request.Category,
+                Businessname = request.businessName,
+                BusinessDescription = request.businessDescription,
+                BusinessLogo = request.businessLogo
 
             };
 
-            var createdUser = await _userManager.CreateAsync(newUser, password);
+            var createdUser = await _userManager.CreateAsync(newUser, request.Password);
 
             if (!createdUser.Succeeded)
             {
@@ -159,8 +160,6 @@ namespace Wema.CampusRunz.Domain.Services
                 }
             }
 
-
-
             var currentuser = _userManager.Users.FirstOrDefault(x => x.UserName == Email);
 
 
@@ -232,29 +231,79 @@ namespace Wema.CampusRunz.Domain.Services
             };
         }
 
-        public async Task<AuthenticationResult> ForgotPasswordAsync(string email)
+        public async Task<AuthenticationResult> ForgotPasswordAsync(string username)
         {
-            var user = await _userManager.FindByEmailAsync(email);
 
-            if (user == null)
+            string checkForEmail = "@";
+            string userId = "";          
+
+            if (!username.Contains(checkForEmail))
             {
-                return new AuthenticationResult
-                {
-                    Error = "The information you entered does not match our records."
+                var PhoneNumber = username;
 
-                };
+                var confirmPhoneNumber =  _userManager.Users.FirstOrDefault(x => x.PhoneNumber == username);
+
+               
+
+                if (confirmPhoneNumber == null)
+                {
+                    return new AuthenticationResult
+                    {
+                        Error = "The information you entered does not match our records."
+                    };
+                }
+
+                userId = confirmPhoneNumber.Id;
+
+                var checkExistingToken = await _applicationDbContext.Tokens.Where(T => T.UserId == userId).FirstOrDefaultAsync();
+
+                if(checkExistingToken != null)
+                {
+                    _applicationDbContext.Tokens.Remove(checkExistingToken);
+
+                    await _applicationDbContext.SaveChangesAsync();
+
+
+                }
+
+            }
+
+            else
+            {
+                var user = await _userManager.FindByEmailAsync(username);
+
+                    if (user == null)
+                    {
+                        return new AuthenticationResult
+                        {
+                            Error = "The information you entered does not match our records."
+
+                        };
+                    }
+
+                userId = user.Id;
+
+                var checkExistingToken = await _applicationDbContext.Tokens.Where(T => T.UserId == userId).FirstOrDefaultAsync();
+
+                if (checkExistingToken != null)
+                {
+                    _applicationDbContext.Tokens.Remove(checkExistingToken);
+
+                    await _applicationDbContext.SaveChangesAsync();
+
+
+                }
             }
 
             //var currentuser = _userManager.Users.FirstOrDefault(x => x.UserName == email);
 
-            var currentUser = user.Id.ToString();
             var Token = GenerateToken();
 
-            Tokens rsttoken = new Tokens();
+            Tokens rsttokens = new Tokens();
 
-            rsttoken.UserId = currentUser;
-            rsttoken.Token = Token;
-            _applicationDbContext.Tokens.Add(rsttoken);
+            rsttokens.UserId = userId;
+            rsttokens.Token = Token;
+            _applicationDbContext.Tokens.Add(rsttokens);
             if (await _applicationDbContext.SaveChangesAsync() > 0)
             {
                 return new AuthenticationResult
@@ -273,7 +322,7 @@ namespace Wema.CampusRunz.Domain.Services
             Random rstToken = new Random();
 
             char ch;
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
                 ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * rstToken.NextDouble() + 65)));
                 builder.Append(ch);
@@ -286,6 +335,9 @@ namespace Wema.CampusRunz.Domain.Services
         {
             var ValidToken = await _applicationDbContext.Tokens.Where(T => T.Token == token).FirstOrDefaultAsync();
 
+            var user = await  _userManager.FindByIdAsync(ValidToken.UserId);
+
+           
             if (ValidToken == null)
             {
                 return new AuthenticationResult
@@ -294,20 +346,44 @@ namespace Wema.CampusRunz.Domain.Services
                 };
 
             }
-
             _applicationDbContext.Tokens.Remove(ValidToken);
 
             await _applicationDbContext.SaveChangesAsync();
 
-            return new AuthenticationResult
-            {
-                Success = true
-            };
+            return GenerateAuthenticationResultForUser3(user);
+
         }
 
+        private AuthenticationResult GenerateAuthenticationResultForUser3(AppUser user) 
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+            var TokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims: new[]
+                {
+                    new Claim(type: JwtRegisteredClaimNames.Sub, value: user.Email),
+                    new Claim(type: JwtRegisteredClaimNames.Jti, value: Guid.NewGuid().ToString()),
+                    new Claim(type: "id", value: user.Id) 
+                }),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), algorithm: SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(TokenDescriptor);
+
+            return new AuthenticationResult
+            {
+                Success = true,
+                Token = tokenHandler.WriteToken(token),
+
+            };
+
+        }
         public async Task<AuthenticationResult> ResetPasswordAsync(string username, string newpassword, string confirmnewpassword)
         {
             var user = await _userManager.FindByEmailAsync(username);
+
 
             if (user == null)
             {
@@ -317,6 +393,8 @@ namespace Wema.CampusRunz.Domain.Services
 
                 };
             }
+
+
 
             if (newpassword != confirmnewpassword)
             {

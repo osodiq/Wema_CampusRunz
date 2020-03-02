@@ -40,6 +40,8 @@ namespace Wema.CampusRunz.Api
             Configuration.Bind(key: nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
 
+           
+
             services.AddScoped<IUserService, UserService>();
             services.AddIdentity<AppUser, IdentityRole>(Options =>
             {
@@ -50,6 +52,16 @@ namespace Wema.CampusRunz.Api
                 Options.Password.RequireNonAlphanumeric = false;
                 Options.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+            
+
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            });
+
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddAuthentication(configureOptions: x =>
             {
@@ -72,22 +84,16 @@ namespace Wema.CampusRunz.Api
 
             });
 
-            services.AddCors(c =>
-            {
-                c.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-            });
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(x =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Wema_CampusRunZ API Documentation", Version = "v1" });
+                x.SwaggerDoc("v1", new Info { Title = "Wema_CampusRunZ API Documentation", Version = "v1" });
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer",new string[0] }
                 };
 
-                c.AddSecurityDefinition(name: "Bearer", new ApiKeyScheme
+                x.AddSecurityDefinition(name: "Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using bearer scheme",
                     Name = "Authorization",

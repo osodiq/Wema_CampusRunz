@@ -45,15 +45,15 @@ namespace Wema.CampusRunz.Core.DTOs
         {
             public const string GetAll = Base + "/auth";
 
-            public const string Signin = Base + "/auth/signin";
+            public const string Signin =  "/auth/signin";
              
-            public const string Signup = Base + "/auth/signup"; 
+            public const string Signup =  "/auth/signup"; 
 
-            public const string ForgotPassword = Base + "/auth/forgort-password/generate-token";
+            public const string ForgotPassword =  "/auth/forgort-password/generate-token";
 
-            public const string ValidateToken = Base + "/auth/ValidateToken";
+            public const string ValidateToken = "/auth/ValidateToken";
 
-            public const string ResetPassword = Base + "/auth/forget-password/reset-password"; 
+            public const string ResetPassword = "/auth/forget-password/reset-password"; 
 
         }
 

@@ -6,6 +6,6 @@ namespace Wema.CampusRunz.Core.DTOs.Request
 {
     public class ForgotPasswordRequest
     {
-        public string Contact { get; set; } 
+        public string Username { get; set; } 
     }
 }

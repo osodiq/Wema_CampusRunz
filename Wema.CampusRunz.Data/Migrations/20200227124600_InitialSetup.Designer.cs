@@ -10,8 +10,8 @@ using Wema.CampusRunz.Data.Data;
 namespace Wema.CampusRunz.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200302103928_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20200227124600_InitialSetup")]
+    partial class InitialSetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -194,6 +194,39 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.CustomerOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AggregateId");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("DeliveryAddress");
+
+                    b.Property<string>("Detail");
+
+                    b.Property<int?>("MediaOrderId");
+
+                    b.Property<int?>("PaymentId");
+
+                    b.Property<int?>("ProductId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AggregateId");
+
+                    b.HasIndex("MediaOrderId");
+
+                    b.HasIndex("PaymentId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CustomerOrders");
+                });
+
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.DeliveryMethod", b =>
                 {
                     b.Property<int>("Id")
@@ -211,105 +244,7 @@ namespace Wema.CampusRunz.Data.Migrations
                     b.ToTable("DeliveryMethods");
                 });
 
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.EventTicketOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<decimal>("TotalAmount");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EventTicketOrders");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.FastFoodOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("DeliveryAddress");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<decimal>("TotalAmount");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FastFoodOrders");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.GassRefillOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("DeliveryAddress");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<decimal>("TotalAmount");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("GassRefillOrders");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.HotelOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<decimal>("TotalAmount");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("HotelOrders");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.MediaAndProductionOrder", b =>
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.MediaOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -323,50 +258,30 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("ExtraDetail");
 
-                    b.Property<int>("NumberOfPages");
-
                     b.Property<string>("PrintingType");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<decimal>("TotalAmount");
-
-                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MediaAndProductionOrders");
+                    b.ToTable("MediaOrders");
                 });
 
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.OrderCategory", b =>
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.OrderAggregate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Amount");
+
                     b.Property<string>("Category");
 
                     b.Property<DateTime>("CreatedAt");
-
-                    b.Property<int?>("EventTicketOrderId");
-
-                    b.Property<int?>("HotelOrderId");
-
-                    b.Property<decimal>("Price");
 
                     b.Property<int>("Quantity");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventTicketOrderId");
-
-                    b.HasIndex("HotelOrderId");
-
-                    b.ToTable("OrderCategories");
+                    b.ToTable("OrderAggregates");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.Payment", b =>
@@ -381,19 +296,15 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("Method");
 
-                    b.Property<int>("ProductId");
+                    b.Property<int?>("ProductId");
 
                     b.Property<bool>("Status");
 
                     b.Property<decimal>("TotalAmount");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Payments");
                 });
@@ -426,11 +337,7 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("EventTime");
 
-                    b.Property<string>("Images");
-
                     b.Property<string>("Name");
-
-                    b.Property<string>("UserId");
 
                     b.Property<string>("Vendor");
 
@@ -438,30 +345,7 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Amount");
-
-                    b.Property<string>("Category");
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<int>("ProductId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
@@ -474,17 +358,35 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("ImagePath");
 
-                    b.Property<string>("ImageString");
-
                     b.Property<bool>("IsActive");
+
+                    b.Property<string>("ProductId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductPhotos");
+                });
+
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Name");
 
                     b.Property<int>("ProductId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
-                    b.ToTable("ProductPhotos");
+                    b.ToTable("ProductTypes");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.Service", b =>
@@ -597,109 +499,37 @@ namespace Wema.CampusRunz.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.EventTicketOrder", b =>
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.CustomerOrder", b =>
                 {
+                    b.HasOne("Wema.CampusRunz.Core.Models.OrderAggregate", "Aggregate")
+                        .WithMany()
+                        .HasForeignKey("AggregateId");
+
+                    b.HasOne("Wema.CampusRunz.Core.Models.MediaOrder", "MediaOrder")
+                        .WithMany()
+                        .HasForeignKey("MediaOrderId");
+
+                    b.HasOne("Wema.CampusRunz.Core.Models.Payment", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId");
+
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.FastFoodOrder", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.GassRefillOrder", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.HotelOrder", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.MediaAndProductionOrder", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.OrderCategory", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.EventTicketOrder")
-                        .WithMany("OrderCategories")
-                        .HasForeignKey("EventTicketOrderId");
-
-                    b.HasOne("Wema.CampusRunz.Core.Models.HotelOrder")
-                        .WithMany("OrderCategories")
-                        .HasForeignKey("HotelOrderId");
+                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.Payment", b =>
                 {
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ProductId");
                 });
 
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.Product", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductCategory", b =>
+            modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductType", b =>
                 {
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany("ProductCatory")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
-                {
-                    b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                        .WithOne("ProductType")
+                        .HasForeignKey("Wema.CampusRunz.Core.Models.ProductType", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
