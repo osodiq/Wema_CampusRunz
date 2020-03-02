@@ -27,7 +27,7 @@ namespace Wema.CampusRunz.Domain.Services
 
         #region Event Ticket
 
-        public async Task<EventTicketOrder> CreateEventTicketOrder(int productId, string userId, List<OrderCategory> orderCategoryVm)
+        public async Task<EventTicketOrder> CreateEventTicketOrder(int productId, string userId, Category OrderCategory)
         {
             try
             {
@@ -37,19 +37,22 @@ namespace Wema.CampusRunz.Domain.Services
                     return null;
 
                 }
-                if (orderCategoryVm.Count == 0)
+                if (OrderCategory.OrderCategoryVms.Count == 0)
                 {
                     return null;
                 }
                 EventTicketOrder ticketOrder = new EventTicketOrder();
                 ticketOrder.ProductId = ticketToBeBooked.Id;
                 ticketOrder.UserId = userId;
-                ticketOrder.OrderCategories = orderCategoryVm;
+                
 
-                foreach (var item in orderCategoryVm)
+                ticketOrder.OrderCategories  = new List<OrderCategory>();
+
+                foreach (var item in OrderCategory.OrderCategoryVms)
                 {
-                   
-                    ticketOrder.TotalAmount = item.Quantity * (item.Price) + ticketToBeBooked.ConvinienceFee;
+                    ticketOrder.OrderCategories.Add(new OrderCategory { Quantity = item.Quantity, Price = item.Price, Category = item.Category });
+                    ticketOrder.TotalAmount = (item.Quantity) * item.Price + ticketToBeBooked.ConvinienceFee;
+
                 }
                 _context.EventTicketOrders.Add(ticketOrder);
                 if (await _context.SaveChangesAsync() > 0)
@@ -123,7 +126,7 @@ namespace Wema.CampusRunz.Domain.Services
         #endregion
         #region Hotel
 
-        public async Task<HotelOrder> CreateHotelOrder(int productId, string userId, List<OrderCategory> orderCategoryVm)
+        public async Task<HotelOrder> CreateHotelOrder(int productId, string userId, Category OrderCategory)
         {
             try
             {
@@ -133,18 +136,19 @@ namespace Wema.CampusRunz.Domain.Services
                     return null;
 
                 }
-                if (orderCategoryVm.Count == 0)
+                if (OrderCategory.OrderCategoryVms.Count == 0)
                 {
                     return null;
                 }
                 HotelOrder hotelOrder = new HotelOrder();
                 hotelOrder.ProductId = hotelToBeBooked.Id;
                 hotelOrder.UserId = userId;
-                hotelOrder.OrderCategories = orderCategoryVm;
 
-                foreach (var item in orderCategoryVm)
+               hotelOrder.OrderCategories = new List<OrderCategory>();
+                
+                foreach (var item in OrderCategory.OrderCategoryVms)
                 {
-                   
+                    hotelOrder.OrderCategories.Add(new OrderCategory { Quantity = item.Quantity, Price = item.Price, Category = item.Category});
                     hotelOrder.TotalAmount = (item.Quantity)* item.Price + hotelToBeBooked.ConvinienceFee;
                   
                 }

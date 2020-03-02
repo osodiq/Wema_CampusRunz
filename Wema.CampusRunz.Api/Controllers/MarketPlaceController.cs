@@ -70,7 +70,7 @@ namespace Wema.CampusRunz.Api.Controllers
         //Gass Refill
         // POST: api/Products
         [HttpPost("{userId}/Product/gass-refill")]
-        public async Task<IActionResult> RefillGass(ProductCreationDto.GassRefillDto productDto, string userId)
+        public async Task<IActionResult> RefillGass(ProductCreationDto.GasRefillDto productDto, string userId)
         {
 
             try
@@ -89,10 +89,10 @@ namespace Wema.CampusRunz.Api.Controllers
                 }
 
 
-                ProductCreationDto.GassRefillDto refilledGass = await _productManager.CreateGassRefill(productDto, userId);
+                ProductCreationDto.GasRefillDto refilledGass = await _productManager.CreateGasRefill(productDto, userId);
                 if(refilledGass != null)
                 {
-                    return Created("", new Response<ProductCreationDto.GassRefillDto>
+                    return Created("", new Response<ProductCreationDto.GasRefillDto>
                     {
                         Code = "201",
                         Message = $"You have successfully created a product with name {refilledGass.Name}",
@@ -189,123 +189,6 @@ namespace Wema.CampusRunz.Api.Controllers
             
         }
 
-        //Media-production
-        // POST: api/Products
-        //[HttpPost("Product/media-production")]
-        //public async Task<IActionResult> Media(ProductDto productDto)
-
-        //{
-
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return BadRequest(new Response<string>
-        //            {
-        //                Code = "400",
-        //                Message = "Invalid model"
-        //            });
-        //        }
-
-        //        //process photo upload
-        //        var upload = ProcessPhotos(productDto.UploadedImageList);
-        //        if (upload)
-        //        {
-        //            var product = new Product
-        //            {
-        //                Category = productDto.Category,
-        //                Name = productDto.Name,
-        //                Amount = productDto.Amount,
-        //                Vendor = productDto.Vendor,
-        //                Description = productDto.Description,
-        //                Delivery = productDto.Delivery,
-        //                DeliveryCost = productDto.DeliveryCost,
-        //                ConvienceFee = productDto.ConvienceFee,
-        //                Comment = productDto.Comment
-        //            };
-
-        //            _context.Products.Add(product);
-        //            await _context.SaveChangesAsync();
-
-        //            return Created("", new Response<ProductDto>
-        //            {
-        //                Code = "201",
-        //                Message = $"You have successfully created a product with name '{productDto.Name}'",
-        //                Data = productDto
-
-        //            });
-
-        //        }
-
-        //        return BadRequest(new Response<string> { Code = "500", Message = "Internal server serror" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var err = ex.Message;
-        //    }
-        //    return BadRequest(new Response<string> { Code = "500", Message = "Internal server serror" });
-        //}
-
-
-        //// POST: api/Products
-        //[HttpPost("Service")]
-        //public async Task<IActionResult> Service([FromBody] ServiceDto serviceDto)
-
-        //{
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return BadRequest(new Response<string>
-        //            {
-
-        //                Code = "400",
-        //                Message = "Invalid model"
-        //            });
-        //        }
-
-        //        //process photo upload
-        //        var upload = ProcessPhotos(serviceDto.UploadedImageList);
-        //        if (upload)
-        //        {
-                    
-        //            var service = new Service
-        //            {
-        //                BusinessName = serviceDto.BusinessName,
-        //                BusinessPhoneNumber = serviceDto.BusinessPhoneNumber,
-        //                BusinessDescription = serviceDto.BusinessDescription,
-        //                EmailAddress = serviceDto.EmailAddress,
-        //                Address = serviceDto.Address,
-        //                TwitterHandle = serviceDto.TwitterHandle,
-        //                InstagramHandle = serviceDto.InstagramHandle,
-        //            };
-
-        //            _context.Services.Add(service);
-        //            await _context.SaveChangesAsync();
-
-        //            return Ok(new Response<ServiceDto>
-        //            {
-        //                Code = "201",
-        //                Message = $"You have successfully created a service with business name '{serviceDto.BusinessName}'",
-        //                Data = serviceDto
-        //            });
-
-        //        }
-
-        //        return BadRequest(new Response<string> { Code = "400", Message = "Internal server serror" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var err = ex.Message;
-        //    }
-        //    return BadRequest(new Response<string> { Code = "400", Message = "Internal server serror" });
-        //}
-
-        private bool ProcessPhotos(List<string> photos)
-        {
-            //implemetation later
-            return true;
-        }
-
+        
     }
 }

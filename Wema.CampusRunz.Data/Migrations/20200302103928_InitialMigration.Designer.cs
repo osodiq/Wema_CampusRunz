@@ -10,7 +10,7 @@ using Wema.CampusRunz.Data.Data;
 namespace Wema.CampusRunz.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200302072051_InitialMigration")]
+    [Migration("20200302103928_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -426,6 +426,8 @@ namespace Wema.CampusRunz.Data.Migrations
 
                     b.Property<string>("EventTime");
 
+                    b.Property<string>("Images");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("UserId");
@@ -696,7 +698,7 @@ namespace Wema.CampusRunz.Data.Migrations
             modelBuilder.Entity("Wema.CampusRunz.Core.Models.ProductPhoto", b =>
                 {
                     b.HasOne("Wema.CampusRunz.Core.Models.Product", "Product")
-                        .WithMany("Images")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

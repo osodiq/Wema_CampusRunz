@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Wema.CampusRunz.Core.DTOs;
 using Wema.CampusRunz.Core.Interfaces;
 using Wema.CampusRunz.Core.Models;
+using static Wema.CampusRunz.Core.DTOs.OrderDTO;
 
 namespace Wema.CampusRunz.Api.Controllers
 {
@@ -81,7 +82,7 @@ namespace Wema.CampusRunz.Api.Controllers
         }
 
         [HttpPost("{userId}/{productId}/hotel-order")]
-        public async Task<IActionResult> BookHotel(int productId, string userId, List<OrderCategory> orderCategoryVm)
+        public async Task<IActionResult> BookHotel(int productId, string userId, Category orderCategoryVm)
         {
             try
             {
@@ -107,7 +108,7 @@ namespace Wema.CampusRunz.Api.Controllers
         }
 
         [HttpPost("{userId}/{productId}/ticket-order")]
-        public async Task<IActionResult> BuyEventTicket(int productId, string userId, [FromBody]List<OrderCategory> orderCategoryVm)
+        public async Task<IActionResult> BuyEventTicket(int productId, string userId, Category orderCategoryVm)
         {
             try
             {

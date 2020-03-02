@@ -16,17 +16,17 @@ namespace Wema.CampusRunz.Core.DTOs
             public decimal Amount { get; set; }
             public decimal ConvinienceFee { get; set; }
             public string Description { get; set; }
-            public List<ProductPhoto> Images { get; set; }
-            
+            public List<string> UploadedImageList { get; set; }
+
         }
 
-        public class GassRefillDto
+        public class GasRefillDto
         {
             public string Category { get; set; }
             public string Name { get; set; }
             public decimal Amount { get; set; }
             public decimal ConvinienceFee { get; set; }
-            public List<ProductPhoto> Images { get; set; }
+            public List<string> UploadedImageList { get; set; }
             public string Description { get; set; }
 
         }
@@ -38,8 +38,8 @@ namespace Wema.CampusRunz.Core.DTOs
             public string Name { get; set; }
             public decimal ConvinienceFee { get; set; }
             public string Description { get; set; }
-            public List<ProductPhoto> Images { get; set; }
-            public List<ProductCategory> HotelCategories { get; set; }
+            public List<ProductCategoryDto> HotelCategories { get; set; }
+            public List<string> Images { get; set; }
 
         }
 
@@ -52,11 +52,17 @@ namespace Wema.CampusRunz.Core.DTOs
             public string EventTime { get; set; }
             public decimal ConvinienceFee { get; set; }
             public string Description { get; set; }
-            public List<ProductPhoto> Images { get; set; }
-            public List<ProductCategory> EventCategory { get; set; }
-
+            public List<string> UploadedImageList { get; set; }
+            public List<ProductCategoryDto> EventCategories { get; set; }
+        
+        }
+        public class ProductCategoryDto
+        {
+            public string Category { get; set; }
+            public decimal Amount { get; set; }
         }
 
-
     }
+
+    
 }
