@@ -176,7 +176,7 @@ namespace Wema.CampusRunz.Domain.Services
                 {
                     new Claim(type: JwtRegisteredClaimNames.Sub, value: currentuser.Email),
                     new Claim(type: JwtRegisteredClaimNames.Jti, value: Guid.NewGuid().ToString()),
-                    new Claim(type: "id", value: currentuser.Id)
+                    new Claim("id", value:  currentuser.Id)
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), algorithm: SecurityAlgorithms.HmacSha256Signature)

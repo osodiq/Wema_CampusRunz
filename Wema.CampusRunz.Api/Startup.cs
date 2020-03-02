@@ -35,8 +35,7 @@ namespace Wema.CampusRunz.Api
             services.AddTransient<IProductManager, ProductManager>();
             services.AddTransient<IServiceManager, ServiceManager>();
             services.AddTransient<IRepository<Product>, Repository<Product>>();
-
-
+            services.AddScoped<ICustomerService, CustomerServices>();
             var jwtSettings = new JwtSettings();
             Configuration.Bind(key: nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
@@ -70,19 +69,20 @@ namespace Wema.CampusRunz.Api
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-           .AddJwtBearer(x =>
-           {
-               x.SaveToken = true;
-               x.TokenValidationParameters = new TokenValidationParameters
-               {
-                   ValidateIssuerSigningKey = true,
-                   IssuerSigningKey = new SymmetricSecurityKey(key: Encoding.ASCII.GetBytes(jwtSettings.Secret)),
-                   ValidateIssuer = false,
-                   ValidateAudience = false,
-                   RequireExpirationTime = false,
-                   ValidateLifetime = true
-               };
-           });
+            .AddJwtBearer(x =>
+            {
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key: Encoding.ASCII.GetBytes(jwtSettings.Secret)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    RequireExpirationTime = false,
+                    ValidateLifetime = true
+                };
+
+            });
 
 
             services.AddSwaggerGen(x =>
@@ -101,7 +101,7 @@ namespace Wema.CampusRunz.Api
                     Type = "apiKey"
                 });
 
-                x.AddSecurityRequirement(security);   
+                c.AddSecurityRequirement(security);
             });
 
           

@@ -6,12 +6,13 @@ using System.Text;
 
 namespace Wema.CampusRunz.Core.Models
 {
-    public class Tokens : BaseEntity
+    public class Tokens: BaseEntity
     {
         [ForeignKey("AppUser")]
         public string UserId { get; set; }
         public AppUser User { get; set; }
         public string Token { get; set; }
+        
 
     }
 }

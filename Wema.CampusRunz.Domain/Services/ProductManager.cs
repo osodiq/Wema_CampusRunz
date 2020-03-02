@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Wema.CampusRunz.Core.DTOs;
 using Wema.CampusRunz.Core.Interfaces;
@@ -19,11 +22,9 @@ namespace Wema.CampusRunz.Domain.Services
             _context = context;
         }
 
-        public async Task<ProductCreationDto.HotelDto> CreateHotel(ProductCreationDto.HotelDto model)
+        public async Task<ProductCreationDto.HotelDto> CreateHotel(ProductCreationDto.HotelDto model, string userId)
         {
-            var hotel = await _context.Products.FirstOrDefaultAsync(x => x.Name == model.Name);
-            if(hotel == null)
-            {
+           
                 Product productToCreate = new Product
                 {
                     Category = model.Category,
@@ -31,13 +32,15 @@ namespace Wema.CampusRunz.Domain.Services
                     Description = model.Description,
                     ConvinienceFee = model.ConvinienceFee,
                     Address = model.Address,
-                    ProductType = new ProductType
-                    {
-                       Name = model.HotelCategory.Category,
-                       Amount = model.HotelCategory.Amount
-                    }
-                    //image to be added later
+                    UserId = userId,
+                    Images = JsonConvert.SerializeObject(model.Images),
 
+                };
+
+                var productCategories = new List<ProductCategory>();
+                foreach (var item in model.HotelCategories)
+                {
+                    productCategories.Add(new ProductCategory { ProductId = productToCreate.Id, Category = item.Category, Amount = item.Amount });
                 };
                 _context.Products.Add(productToCreate);
                 if(await _context.SaveChangesAsync() > 0)
@@ -45,18 +48,14 @@ namespace Wema.CampusRunz.Domain.Services
                     return model;
                 }
                 return null;
-            }
-            return null;
+           
 
         }
 
        
 
-        public async Task<ProductCreationDto.EventTicketDto> CreateEventTicket(ProductCreationDto.EventTicketDto model)
+        public async Task<ProductCreationDto.EventTicketDto> CreateEventTicket(ProductCreationDto.EventTicketDto model, string userId)
         {
-           var ticket = await _context.Products.FirstOrDefaultAsync(x => x.Name == model.Name);
-            if(ticket == null)
-            {
                 Product productToCreate = new Product
                 {
                     Category = model.Category,
@@ -66,26 +65,27 @@ namespace Wema.CampusRunz.Domain.Services
                     ConvinienceFee = model.ConvinienceFee,
                     EventDate = model.EventDate,
                     EventTime = model.EventTime,
-                    ProductType = new ProductType
-                    {
-                         Name = model.EventCategory.Category,
-                         Amount = model.EventCategory.Amount
-                    }
-
-                     //image to be added later
+                    UserId = userId,
+                    Images = JsonConvert.SerializeObject(model.UploadedImageList)
 
                 };
+
+                var productCategories = new List<ProductCategory>();
+                foreach (var item in model.EventCategories)
+                {
+                    productCategories.Add(new ProductCategory { ProductId = productToCreate.Id, Category = item.Category, Amount = item.Amount });
+                };
+
                 _context.Products.Add(productToCreate);
                 if(await _context.SaveChangesAsync() > 0)
                 {
                     return model;
                 }
                 return null;
-            }
-            return null;
+           
         }
 
-        public async Task<ProductCreationDto.GassRefillDto> CreateGassRefill(ProductCreationDto.GassRefillDto model)
+        public async Task<ProductCreationDto.GasRefillDto> CreateGasRefill(ProductCreationDto.GasRefillDto model, string userId)
         {
             var gass = await _context.Products.FirstOrDefaultAsync(x => x.Name == model.Name);
             if (gass == null)
@@ -97,8 +97,9 @@ namespace Wema.CampusRunz.Domain.Services
                     Amount = model.Amount,
                     Description = model.Description,
                     ConvinienceFee = model.ConvinienceFee,
-                    // image to be added later
-                    
+                    Images = JsonConvert.SerializeObject(model.UploadedImageList),
+                    UserId = userId
+
                 };
                 _context.Products.Add(productToCreate);
                 if (await _context.SaveChangesAsync() > 0)
@@ -111,24 +112,10 @@ namespace Wema.CampusRunz.Domain.Services
 
         }
 
-        public bool CreateProduct(Product product)
-        {
-            try
-            {
-                _productRepository.Insert(product);
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
-        public async Task<ProductCreationDto.FastFoodDto> CreatFastFood(ProductCreationDto.FastFoodDto model)
+        public async Task<ProductCreationDto.FastFoodDto> CreatFastFood(ProductCreationDto.FastFoodDto model, string userId)
         {
-            var fastFood = await _context.Products.FirstOrDefaultAsync(x => x.Name == model.Name);
-            if (fastFood == null)
-            {
+           
                 Product productToCreate = new Product
                 {
                     Address = model.Address,
@@ -138,7 +125,8 @@ namespace Wema.CampusRunz.Domain.Services
                     Vendor = model.Vendor,
                     Description = model.Description,
                     ConvinienceFee = model.ConvinienceFee,
-                    //image to be added later
+                    Images = JsonConvert.SerializeObject(model.UploadedImageList),
+                    UserId = userId
                 };
                 _context.Products.Add(productToCreate);
                 if (await _context.SaveChangesAsync() > 0)
@@ -146,8 +134,7 @@ namespace Wema.CampusRunz.Domain.Services
                     return model;
                 }
                 return null;
-            }
-            return null;
+          
 
         }
 
@@ -172,11 +159,57 @@ namespace Wema.CampusRunz.Domain.Services
                   Amount = product.Amount,
                   CreatedAt = product.CreatedAt,
                   Description = product.Description
-
-
+                  
                 };
                 return productToReturn;
             }
         }
+
+
+        public async Task<List<GetFastFoodDto>> GetGasRefill()
+        {
+            var result = _context.Products.Where(x => x.Category.ToLower().Equals("fast food")).ToList()
+                .Select(x => new GetFastFoodDto
+                {
+                    ProductId = x.Id,
+                    Category = x.Category,
+                    Name = x.Name,
+                    Amount = x.Amount,
+                    Vendor = x.Vendor,
+                    Visibility = x.Visibility,
+                    Image = JsonConvert.DeserializeObject<List<string>>(x.Images).FirstOrDefault(),
+                    CreatedAt = x.CreatedAt
+                }).ToList();
+
+            return result;
+        }
+
+
+        public async Task<GetFastFoodByIdDto> GetFastFoodById(int productId)
+        {
+            var result = await _context.Products.FirstOrDefaultAsync(x => x.Category.ToLower().Equals("fast food") && x.Id == productId);
+
+            if (result == null)
+            {
+                return null;
+            }
+            var model = new GetFastFoodByIdDto
+            {
+                ProductId = result.Id,
+                Category = result.Category,
+                Name = result.Name,
+                Amount = result.Amount,
+                Vendor = result.Vendor,
+                Address = result.Address,
+                Description = result.Description,
+                ConvenienceFee = result.ConvinienceFee.ToString(),
+                Visibility = result.Visibility,
+                UploadedImageList = JsonConvert.DeserializeObject<List<string>>(result.Images),
+                CreatedAt = result.CreatedAt
+            };
+
+            return model;
+        }
+
     }
 }
